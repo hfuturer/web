@@ -1,0 +1,61 @@
+</head>
+<body>
+		
+<style>.zoresmile
+{width:150px;
+height: 93px;position: fixed;
+bottom: 50px;
+right: 10px;
+text-align: center;
+z-index: 9999;}
+.zoresmile
+img{width: 100%;height: 100%;}
+.zoresmiler 
+span{background: #e8e8e8;display: block;
+height: 24px;
+line-height: 24px;
+cursor: pointer;}
+</style>
+<div class="zoresmile" id="roll">
+<a href="#" target="_blank">
+	<img src="image.jpg" />
+</a>
+<div>
+<span class="close">关闭</span>
+</div>
+
+</div>
+<script type="text/javascript">
+ var ggRoll = {
+ roll: document.getElementById("roll"),
+ speed: 20,
+ statusX: 1,
+ statusY: 1,
+ x: 100,
+ y: 300,
+ winW: document.documentElement.clientWidth - document.getElementById("roll").offsetWidth,
+ winH: document.documentElement.clientHeight - document.getElementById("roll").offsetHeight,
+ Go: function () {
+ this.roll.style.left = this.x + 'px';
+ this.roll.style.top = this.y + 'px';
+
+ this.x = this.x + (this.statusX ? -1 : 1)
+ if (this.x < 0) { this.statusX = 0 }
+ if (this.x > this.winW) { this.statusX = 1 }
+
+ this.y = this.y + (this.statusY ? -1 : 1)
+ if (this.y < 0) { this.statusY = 0 }
+ if (this.y > this.winH) { this.statusY = 1 }
+ }
+ }
+ var interval = setInterval("ggRoll.Go()", ggRoll.speed);
+ ggRoll.roll.onmouseover = function () { clearInterval(interval) };
+ ggRoll.roll.onmouseout = function () { interval = setInterval("ggRoll.Go()", ggRoll.speed) };
+</script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="./jquery.js"></script>
+<script type="text/javascript">
+			$(".close").click(function(){
+				$(".zoresmile").remove();
+			})
+		</script>
