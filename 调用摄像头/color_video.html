@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>color with video</title>
+ 
+ 
+</head>
+<body style="text-align:center">
+  
+
+
+  <video id="video" width="800" height="500" controls>
+    </video>
+    <p>
+      <button id="capture">拍照</button>
+      <input type="file" id="take-picture" accept="image/*">
+      
+    </p>
+    <canvas id="canvas" width="800" height="500"></canvas>
+    <script>
+      //访问用户媒体设备的兼容方法
+      function getUserMedia(constraints, success, error) {
+        if (navigator.mediaDevices.getUserMedia) {
+          //最新的标准API
+          navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+        } else if (navigator.webkitGetUserMedia) {
+          //webkit核心浏览器
+          navigator.webkitGetUserMedia(constraints,success, error)
+        } else if (navigator.mozGetUserMedia) {
+          //firfox浏览器
+          navigator.mozGetUserMedia(constraints, success, error);
+        } else if (navigator.getUserMedia) {
+          //旧版API
+          navigator.getUserMedia(constraints, success, error);
+        }
+      }
+   
+      let video = document.getElementById('video');
+      let canvas = document.getElementById('canvas');
+      let context = canvas.getContext('2d');
+   
+      function success(stream) {
+        //兼容webkit核心浏览器
+        let CompatibleURL = window.URL || window.webkitURL;
+        //将视频流设置为video元素的源
+        console.log(stream);
+   
+        // video.src = CompatibleURL.createObjectURL(stream);
+        video.srcObject = stream;
+        video.play();
+      }
+
+
+
+      var takePicture = document.querySelector("#take-picture");
+takePicture.onchange = function (event) {
+    // 获得图片文件的引用
+    var files = event.target.files,
+        file;
+    if (files && files.length > 0) {
+        file = files[0];
+    }
+};
+
+   
+      function error(error) {
+        console.log(`访问用户媒体设备失败${error.name}, ${error.message}`);
+      }
+   
+      if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+        //调用用户媒体设备, 访问摄像头
+        getUserMedia({video : {width: 600, height: 700}}, success, error);
+        
+      } else {
+        alert('不支持访问用户媒体');
+      }
+   
+      document.getElementById('capture').addEventListener('click', function () {
+        context.drawImage(video, 0, 0, 800, 500);      
+      })
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  <script>
+    window.onload = function() {
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+
+      tracking.ColorTracker.registerColor('purple', function(r, g, b) {
+        var dx = r - 120;
+        var dy = g - 60;
+        var dz = b - 210;
+
+        if ((b - g) >= 100 && (r - g) >= 60) {
+          return true;
+        }
+        return dx * dx + dy * dy + dz * dz < 3500;
+      });
+
+      var tracker = new tracking.ColorTracker(['yellow', 'purple']);
+      tracker.setMinDimension(5);
+
+      tracking.track('#video', tracker);
+
+      tracker.on('track', function(event) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        event.data.forEach(function(rect) {
+          if (rect.color === 'custom') {
+            rect.color = tracker.customColor;
+          }
+
+          context.strokeStyle = rect.color;
+          context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+          context.font = '11px Helvetica';
+          context.fillStyle = "#fff";
+          context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+          context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+        });
+      });
+
+      initGUIControllers(tracker);
+    };
+  </script> -->
+
+</body>
+</html>
